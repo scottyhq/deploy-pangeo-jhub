@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  namespace: {{ jupyterhub.namespace }}
+  name: {{ eksctl.clusterName }}-home-nfs
+  labels:
+    type: nfs
+spec:
+  capacity:
+    storage: 1Mi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: "{{ efs.url }}"
+    path: "/"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  namespace: {{ jupyterhub.namespace }}
+  name: home-nfs
+spec:
+  accessModes:
+    - ReadWriteMany
+  # Match name of PV
+  volumeName: {{ eksctl.clusterName }}-home-nfs
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 1Mi

@@ -1,0 +1,20 @@
+aws:
+  accountNumber: XXXXXXXXXXXXXXXX
+  accountProfile: uw
+  user: pangeo-admin
+
+eksctl:
+  clusterName: pangeo-hcp
+  kubernetesVersion: 1.13
+  autoscalerVersion: 1.13.7
+  region: us-west-2
+  sshPublicKey: keys/pangeo.pub
+  s3Arn: arn:aws:iam::aws:policy/AmazonS3FullAccess
+
+jupyterhub:
+  namespace: pangeo
+  secretToken: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+pangeo:
+  version: 19.09.26-dd6574b
+

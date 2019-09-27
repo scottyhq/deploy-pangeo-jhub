@@ -1,0 +1,66 @@
+jupyterhub:
+  # this section specifies the external IP address for pangeo
+  #proxy:
+  #  service:
+  #    loadBalancerIP: <GCE_EXTERNAL_IP>
+  hub:
+    resources:
+      requests:
+        cpu: 0.45
+        memory: 1G
+      limits:
+        cpu: 1.25
+        memory: 2G
+  scheduling:
+    scheduling:
+      userScheduler:
+        enabled: true
+      podPriority:
+        enabled: true
+      userPlaceholder:
+        enabled: false
+    userPods:
+      nodeAffinity:
+        matchNodePurpose: require
+    corePods:
+      nodeAffinity:
+        matchNodePurpose: require
+  singleuser:
+    startTimeout: 600
+    initContainers:
+      - name: volume-mount-hack
+        image: busybox
+        command:
+          - "sh"
+          - "-c"
+          - >
+            id && chown 1000:1000 /home/jovyan && ls -lhd /home/jovyan ;
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+          - name: home
+            mountPath: /home/jovyan
+            subPath: "{{ eksctl.clusterName }}/home/{username}"
+    storage:
+      type: static
+      static:
+        pvcName: home-nfs
+        subPath: "{{ eksctl.clusterName }}/home/{username}"
+    cloudMetadata:
+      enabled: true
+    cpu:
+      limit: 4
+      guarantee: 3
+    memory:
+      limit: 16G
+      guarantee: 14G
+    profileList:
+      - display_name: "Base-notebook (m5.2xlarge | 4 cores, 16Gb)"
+        description: "latest base-notebook from pangeo-stacks"
+        default: True
+        kubespawner_override:
+          image: pangeo/base-notebook:latest
+      - display_name: "Pangeo-notebook (m5.2xlarge | 4 cores, 16Gb)"
+        description: "latest pangeo-notebook from pangeo-stacks"
+        kubespawner_override:
+          image: pangeo/pangeo-notebook:latest
