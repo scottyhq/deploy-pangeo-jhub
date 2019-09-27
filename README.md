@@ -35,15 +35,16 @@ conda activate pangeo-deploy
 ```
 aws:
   accountNumber: XXXXXXX
-  accountProfile: uw
+  accountProfile: XXXXXXX
   user: pangeo-admin
 
 eksctl:
   kubernetesVersion: 1.13
   autoscalerVersion: 1.13.7
-  clusterName: pangeo
-  region: us-west-2
-  sshPublicKey: keys/pangeo.pub
+  clusterName: XXXXXXX
+  region: XXXXXXX
+  zones: XXXXXXX
+  sshPublicKey: XXXXXXX.pub
   s3Arn: arn:aws:iam::aws:policy/AmazonS3FullAccess
 
 jupyterhub:
@@ -53,6 +54,22 @@ jupyterhub:
 pangeo:
   version: 19.09.26-dd6574b
 ```
+
+Where `accountNumber` is your account number (should be known to you) and
+`accountProfile` is the section in your ~/.aws/credentials file that you would
+like to use here for authentication. `clusterName`  is a string of your choosing
+and `region` is the AWS region where you would like to deploy your cluster.
+`zones` should be the AWS availabilty zones to use.
+For example `["us-east-1a" , "us-east-1b"]`. It looks like you should
+avoid `"us-east-1e"`.
+
+See below for generating the `sshPublicKey`
+
+`secretToken` can be generated calling `openssl rand -hex 32`, or reusing another
+token that was generated thusly.
+
+
+
 
 ## 4) create an IAM user for cluster management
 ```
@@ -81,17 +98,12 @@ by looking at the cluster stack in the AWS CloudFormation console.
 
 ? How to create a new ssh private and public key pair?
 ```
-KEY_NAME=my-key
-aws ec2 create-key-pair --key-name ${KEY_NAME} | jq -r ".KeyMaterial" > ${KEY_NAME}.pem
+KEY_NAME=my-cluster-us-east-1
+REGION=us-east-1
+aws ec2 create-key-pair --key-name ${KEY_NAME} --region ${REGION} | jq -r ".KeyMaterial" > ${KEY_NAME}.pem
 chmod 400 ${KEY_NAME}.pem
 ssh-keygen -y -f ${KEY_NAME}.pem > ${KEY_NAME}.pub
 ```
-
-? Cluster failed creating in us-east-1:
-```
-[✖]  AWS::EKS::Cluster/ControlPlane: CREATE_FAILED – "Cannot create cluster 'pangeo-cluster' because us-east-1e, the targeted availability zone, does not currently have sufficient capacity to support the cluster. Retry and choose from these availability zones: us-east-1a, us-east-1b, us-east-1c, us-east-1d, us-east-1f (Service: AmazonEKS; Status Code: 400; Error Code: UnsupportedAvailabilityZoneException; Request ID: 318be6e1-720f-4123-b548-632ce3cef73f)"
-```
-run `eksctl delete cluster` and try again
 
 ? I have multiple kubernetes contexts, how to do I switch between them
 ```
