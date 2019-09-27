@@ -6,3 +6,4 @@ channels:
 dependencies:
   - snakemake-minimal=5.6
   - jinja2=2.10
+  - awscli=1.16.248
