@@ -162,7 +162,7 @@ rule pangeo:
             -f {output.secret} \
             > {log.file}
         kubectl apply -f {input.nfsConfig} >> {log}
-        kubctl get svc proxy-public -n {params.namespace}
+        kubectl get svc proxy-public -n {params.namespace}
         """
 
 rule upgrade:
