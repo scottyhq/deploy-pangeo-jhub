@@ -1,6 +1,7 @@
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
+availabilityZones: {{eksctl.zones}}
 metadata:
   name: {{ eksctl.clusterName }}
   region: {{ eksctl.region }}

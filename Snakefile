@@ -162,7 +162,7 @@ rule pangeo:
             -f {output.secret} \
             > {log.file}
         kubectl apply -f {input.nfsConfig} >> {log}
-        kubctl get svc proxy-public -n {params.namespace}
+        kubectl get svc proxy-public -n {params.namespace}
         """
 
 rule upgrade:
@@ -210,7 +210,6 @@ rule delete_efs:
     """
     params:
         profile=config['aws']['user'],
-        efsid=config['efs']['url'][:11]
     log: 'deployment/delete-efs.log'
     shell:
         """
@@ -231,7 +230,6 @@ rule delete_cluster:
         profile=config['aws']['user'],
         region=config['eksctl']['region'],
         name=config['eksctl']['clusterName'],
-        efsid=config['efs']['url'][:11]
     log: 'deployment/delete-cluster.log'
     shell:
         """
