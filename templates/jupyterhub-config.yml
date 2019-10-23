@@ -12,13 +12,12 @@ jupyterhub:
         cpu: 1.25
         memory: 2G
   scheduling:
-    scheduling:
-      userScheduler:
-        enabled: true
-      podPriority:
-        enabled: true
-      userPlaceholder:
-        enabled: false
+    userScheduler:
+      enabled: true
+    podPriority:
+      enabled: true
+    userPlaceholder:
+      enabled: false
     userPods:
       nodeAffinity:
         matchNodePurpose: require
