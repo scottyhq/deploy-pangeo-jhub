@@ -1,5 +1,8 @@
 # deploy-pangeo-jhub
+
 One-stop shop for deploying a [Pangeo JupyterHub](https://pangeo.io/architecture.html) on AWS. This repository uses `snakemake` to configure and deploy computing resources on AWS. Following the steps in the README you should have a hub up and running in ~ 30 minutes. Inspired by https://github.com/dask/dask-tutorial-infrastructure. Note that are many alternative approaches to deployment. I was inspired to learn snakemake...
+
+**Warning: running this code will incure AWS costs and no gaurantees are made for network security. Use at your own risk**
 
 In more detail running the following code will
   - create an [EKS Kubernetes Cluster](https://aws.amazon.com/eks/)
